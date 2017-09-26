@@ -1,15 +1,15 @@
 ---
 declared-services:
-  my-conversation-service:
+  Conversation-demo:
     label: conversation
     plan: free
 applications:
-- name: conversation-simple
+- name: conv-siva-123-calc
   command: npm start
   path: .
-  memory: 256M
+  memory: 512M
   instances: 1
   services:
-  - my-conversation-service
+  - Conversation-demo
   env:
     NPM_CONFIG_PRODUCTION: false

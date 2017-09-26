@@ -71,8 +71,12 @@ function updateMessage(input, response) {
   if (!response.output) {
     response.output = {};
   } else {
-    return response;
+    if(response.intents.length > 0 && (response.intents[0].intent==='add' || response.intents[0].intent === 'multiply')){
+    	response = getCalculationResult(response);
+    }
   }
+  
+  
   if (response.intents && response.intents[0]) {
     var intent = response.intents[0];
     // Depending on the confidence of the response the app can return different messages.
@@ -92,4 +96,26 @@ function updateMessage(input, response) {
   return response;
 }
 
+function getCalculationResult(response){
+	var numbersArr = [];
+	for(var i = 0; i < response.entities.length; i++){
+		if(response.entities[i].entity === 'sys-number'){
+		numbersArr.push(response.entities[i].value);
+	}
+}
+	
+var result = 0;
+if(response.intents[0].intent === 'add'){
+	result = parseInt(numbersArr[0]) + parseInt(numbersArr[1]);
+}else if(response.intents[0].intent === 'multiply'){
+	result = parseInt(numbersArr[0]) * parseInt(numbersArr[1]);
+}
+
+var output = response.output.text[0];
+output = output.replace('_result_', result);
+response.output.text[0] = output;
+
+return response;
+
+}
 module.exports = app;
